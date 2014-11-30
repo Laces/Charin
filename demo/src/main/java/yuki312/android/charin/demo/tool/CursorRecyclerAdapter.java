@@ -52,6 +52,8 @@ public abstract class CursorRecyclerAdapter<VH extends android.support.v7.widget
                 cursor.registerDataSetObserver(dataSetObserver);
             }
         }
+
+        this.setHasStableIds(true);
     }
 
     @Override

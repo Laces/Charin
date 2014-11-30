@@ -1,6 +1,7 @@
 package yuki312.android.charin.demo.controler;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,17 +9,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import yuki312.android.charin.demo.R;
 import yuki312.android.charin.demo.interaction.WearableNotification;
-import yuki312.android.charin.demo.model.CharinContract;
 import yuki312.android.charin.demo.model.CharinContract.Banks;
 import yuki312.android.charin.demo.tool.CursorRecyclerAdapter;
 import yuki312.android.charin.demo.tool.SwipeDismissRecyclerViewTouchListener;
@@ -44,12 +48,17 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
         Toolbar toolbar = (Toolbar) findViewById(R.id.view_toolbar);
         setSupportActionBar(toolbar);
 
-        bankLayoutManager = new LinearLayoutManager(this);
-        bankAdapter = new PayAdapter(this, null);
         bankRecyclerView = (RecyclerView) findViewById(R.id.view_pay_list);
+        bankLayoutManager = new LinearLayoutManager(this);
         bankRecyclerView.setLayoutManager(bankLayoutManager);
+        bankAdapter = new PayAdapter(this, null);
         bankRecyclerView.setAdapter(bankAdapter);
-
+        bankRecyclerView.setItemAnimator(new DefaultItemAnimator() {
+            @Override
+            public void onRemoveFinished(ViewHolder item) {
+                item.itemView.setX(0);
+            }
+        });
         SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(bankRecyclerView, new DismissCallbacks() {
             @Override
             public boolean canDismiss(int position) {
@@ -57,16 +66,39 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
             }
 
             @Override
-            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                for (int position : reverseSortedPositions) {
-                    recyclerView.getAdapter().notifyItemRemoved(position);
+            public void onDismiss(RecyclerView recyclerView, int position) {
+                recyclerView.invalidate();
+                long id = recyclerView.getAdapter().getItemId(position);
+                if (RecyclerView.NO_ID != id) {
+                    int deleted = getContentResolver().delete(Banks.buildBankUri(id), null, null);
                 }
             }
         });
         bankRecyclerView.setOnTouchListener(touchListener);
         bankRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+        // mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
 
         getSupportLoaderManager().initLoader(LOADER_ID_REMIND, null, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("hoge");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        ContentValues values = new ContentValues();
+        values.put(Banks.BANK_MONEY, 100);
+        values.put(Banks.BANK_TIME, 0);
+        values.put(Banks.TYPE_ID, 0);
+        getContentResolver().insert(Banks.CONTENT_URI, values);
+        getContentResolver().insert(Banks.CONTENT_URI, values);
+        getContentResolver().insert(Banks.CONTENT_URI, values);
+        getSupportLoaderManager().restartLoader(LOADER_ID_REMIND, null, this);
+
+        return true;
     }
 
     @Override
@@ -81,6 +113,7 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
         bankAdapter.swapCursor(cursor);
+        bankAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -108,12 +141,19 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView mTextView;
+            public TextView title;
+            public TextView summary;
 
             public ViewHolder(View v) {
                 super(v);
-                mTextView = (TextView) v.findViewById(R.id.view_list_title);
+                title = (TextView) v.findViewById(R.id.view_list_title);
+                summary = (TextView) v.findViewById(R.id.view_list_summary);
             }
+        }
+
+        @Override
+        protected void onContentChanged() {
+
         }
 
         @Override
@@ -126,9 +166,8 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
 
         @Override
         public void onBindViewHolderCursor(ViewHolder holder, Cursor cursor) {
-            holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(Banks.BANK_MONEY)));
-            holder.mTextView.setTag(cursor.getString(cursor.getColumnIndex(CharinContract.Banks.BANK_MONEY)));
-            //holder.mTextView.setOnClickListener(this);
+            holder.title.setText(cursor.getString(cursor.getColumnIndex(Banks.BANK_MONEY)));
+            holder.summary.setText(cursor.getString(cursor.getColumnIndex(Banks._ID)));
         }
     }
 }
