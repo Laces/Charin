@@ -85,9 +85,9 @@ public abstract class CursorRecyclerAdapter<VH extends android.support.v7.widget
     @Override
     public long getItemId(int position) {
         if (!isDataValid || cursor == null) {
-            return 0;
+            return RecyclerView.NO_ID;
         }
-        return (cursor.moveToPosition(position)) ? cursor.getLong(getIdColumnIndex(cursor)) : 0L;
+        return (cursor.moveToPosition(position)) ? cursor.getLong(getIdColumnIndex(cursor)) : RecyclerView.NO_ID;
     }
 
     public Cursor getCursor() {
