@@ -87,7 +87,7 @@ public abstract class CursorRecyclerAdapter<VH extends android.support.v7.widget
         if (!isDataValid || cursor == null) {
             return 0;
         }
-        return (cursor.moveToPosition(position)) ? getIdColumnIndex(cursor) : 0;
+        return (cursor.moveToPosition(position)) ? cursor.getLong(getIdColumnIndex(cursor)) : 0L;
     }
 
     public Cursor getCursor() {
