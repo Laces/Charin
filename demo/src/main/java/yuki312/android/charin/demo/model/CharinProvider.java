@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -16,6 +15,7 @@ import yuki312.android.charin.demo.model.CharinContract.Banks;
 import yuki312.android.charin.demo.model.CharinContract.Reminds;
 import yuki312.android.charin.demo.model.CharinContract.Types;
 import yuki312.android.charin.demo.model.CharinDatabase.Tables;
+import yuki312.android.charin.demo.tool.SelectionBuilder;
 import yuki312.android.charin.demo.util.LogUtils;
 
 import static yuki312.android.charin.demo.util.LogUtils.LOGV;
@@ -60,26 +60,11 @@ public class CharinProvider extends ContentProvider {
                     + " args=" + Arrays.toString(selectionArgs));
         }
 
-        switch (match) {
-            case BANKS: {
-                int deleted = db.delete(Tables.Bank, selection, selectionArgs);
-                notifyChange(uri);
-                return deleted;
-            }
-            case REMINDS: {
-                int deleted = db.delete(Tables.Remind, selection, selectionArgs);
-                notifyChange(uri);
-                return deleted;
-            }
-            case TYPES: {
-                int deleted = db.delete(Tables.Type, selection, selectionArgs);
-                notifyChange(uri);
-                return deleted;
-            }
-            default: {
-                throw new UnsupportedOperationException("Unknown Operation match=" + match + ", uri=" + uri);
-            }
-        }
+        final SelectionBuilder builder = buildSimpleSelection(uri, match);
+        int deleted = builder.where(selection, selectionArgs).delete(db);
+        notifyChange(uri);
+
+        return deleted;
     }
 
     @Override
@@ -133,12 +118,12 @@ public class CharinProvider extends ContentProvider {
                     + " args=" + Arrays.toString(selectionArgs));
         }
 
-        final SQLiteQueryBuilder builder = buildSimpleSelection(uri, match);
-
         boolean distinct = !TextUtils.isEmpty(
                 uri.getQueryParameter(CharinContract.QUERY_PARAMETER_DISTINCT));
-        builder.setDistinct(distinct);
-        Cursor cursor = builder.query(db, projection, selection, selectionArgs, null, null, sortOrder, null);
+
+        final SelectionBuilder builder = buildSimpleSelection(uri, match);
+        Cursor cursor = builder.where(selection, selectionArgs)
+                .query(db, distinct, projection, sortOrder, null);
 
         Context context = getContext();
         if (context != null) {
@@ -160,36 +145,27 @@ public class CharinProvider extends ContentProvider {
         return true;
     }
 
-    private SQLiteQueryBuilder buildSimpleSelection(Uri uri, int match) {
-        final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+    private SelectionBuilder buildSimpleSelection(Uri uri, int match) {
+        final SelectionBuilder builder = new SelectionBuilder();
 
         switch (match) {
             case BANKS: {
-                builder.setTables(Tables.Bank);
-                return builder;
+                return builder.table(Tables.Bank);
             }
             case BANKS_ID: {
-                builder.setTables(Tables.Bank);
-                builder.appendWhereEscapeString(Banks._ID + "=?" + Banks.getBankID(uri));
-                return builder;
+                return builder.table(Tables.Bank).where(Banks._ID + "=?", Banks.getBankID(uri));
             }
             case REMINDS: {
-                builder.setTables(Tables.Remind);
-                return builder;
+                return builder.table(Tables.Remind);
             }
             case REMINDS_ID: {
-                builder.setTables(Tables.Remind);
-                builder.appendWhereEscapeString(Reminds._ID + "=?" + Reminds.getRemindID(uri));
-                return builder;
+                return builder.table(Tables.Remind).where(Reminds._ID + "=?", Reminds.getRemindID(uri));
             }
             case TYPES: {
-                builder.setTables(Tables.Type);
-                return builder;
+                return builder.table(Tables.Type);
             }
             case TYPES_ID: {
-                builder.setTables(Tables.Type);
-                builder.appendWhereEscapeString(Types._ID + "=?" + Types.getTypeID(uri));
-                return builder;
+                return builder.table(Tables.Type).where(Types._ID + "=?", Types.getTypeID(uri));
             }
             default: {
                 throw new UnsupportedOperationException("Unknown Operation match=" + match + ", uri=" + uri);
