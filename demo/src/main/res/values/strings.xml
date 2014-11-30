@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CharinDemo</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Shown as the title of the user's schedule for today -->
+    <string name="day_human_friendly_today">Today</string>
+
+    <!-- Shown as the title of the user's schedule for tomorrow -->
+    <string name="day_human_friendly_tomorrow">Tomorrow</string>
+
+    <!-- Shown as the title of the user's schedule for yesterday -->
+    <string name="day_human_friendly_yesterday">Yesterday</string>
+</resources>
