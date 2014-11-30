@@ -21,6 +21,8 @@ import yuki312.android.charin.demo.interaction.WearableNotification;
 import yuki312.android.charin.demo.model.CharinContract;
 import yuki312.android.charin.demo.model.CharinContract.Banks;
 import yuki312.android.charin.demo.tool.CursorRecyclerAdapter;
+import yuki312.android.charin.demo.tool.SwipeDismissRecyclerViewTouchListener;
+import yuki312.android.charin.demo.tool.SwipeDismissRecyclerViewTouchListener.DismissCallbacks;
 import yuki312.android.charin.demo.util.LogUtils;
 
 import static yuki312.android.charin.demo.util.LogUtils.LOGW;
@@ -47,6 +49,22 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
         bankRecyclerView = (RecyclerView) findViewById(R.id.view_pay_list);
         bankRecyclerView.setLayoutManager(bankLayoutManager);
         bankRecyclerView.setAdapter(bankAdapter);
+
+        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(bankRecyclerView, new DismissCallbacks() {
+            @Override
+            public boolean canDismiss(int position) {
+                return true;
+            }
+
+            @Override
+            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                for (int position : reverseSortedPositions) {
+                    recyclerView.getAdapter().notifyItemRemoved(position);
+                }
+            }
+        });
+        bankRecyclerView.setOnTouchListener(touchListener);
+        bankRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
 
         getSupportLoaderManager().initLoader(LOADER_ID_REMIND, null, this);
     }
@@ -102,7 +120,7 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
         public PayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
             View listItem = inflater.inflate(R.layout.view_hitstory_item, null);
-            listItem.setOnClickListener(this);
+            //listItem.setOnClickListener(this);
             return new ViewHolder(listItem);
         }
 
@@ -110,7 +128,7 @@ public class HistoryActivity extends ActionBarActivity implements LoaderManager.
         public void onBindViewHolderCursor(ViewHolder holder, Cursor cursor) {
             holder.mTextView.setText(cursor.getString(cursor.getColumnIndex(Banks.BANK_MONEY)));
             holder.mTextView.setTag(cursor.getString(cursor.getColumnIndex(CharinContract.Banks.BANK_MONEY)));
-            holder.mTextView.setOnClickListener(this);
+            //holder.mTextView.setOnClickListener(this);
         }
     }
 }
