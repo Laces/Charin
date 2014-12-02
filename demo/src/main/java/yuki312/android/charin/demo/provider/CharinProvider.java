@@ -1,4 +1,4 @@
-package yuki312.android.charin.demo.model;
+package yuki312.android.charin.demo.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -11,10 +11,10 @@ import android.text.TextUtils;
 
 import java.util.Arrays;
 
-import yuki312.android.charin.demo.model.CharinContract.Banks;
-import yuki312.android.charin.demo.model.CharinContract.Reminds;
-import yuki312.android.charin.demo.model.CharinContract.Types;
-import yuki312.android.charin.demo.model.CharinDatabase.Tables;
+import yuki312.android.charin.demo.provider.CharinContract.Banks;
+import yuki312.android.charin.demo.provider.CharinContract.Reminds;
+import yuki312.android.charin.demo.provider.CharinContract.Types;
+import yuki312.android.charin.demo.provider.CharinDatabase.Tables;
 import yuki312.android.charin.demo.tool.SelectionBuilder;
 import yuki312.android.charin.demo.util.LogUtils;
 

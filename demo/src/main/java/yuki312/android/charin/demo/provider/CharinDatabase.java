@@ -1,13 +1,13 @@
-package yuki312.android.charin.demo.model;
+package yuki312.android.charin.demo.provider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import yuki312.android.charin.demo.model.CharinContract.BankColumns;
-import yuki312.android.charin.demo.model.CharinContract.Banks;
-import yuki312.android.charin.demo.model.CharinContract.RemindColumns;
-import yuki312.android.charin.demo.model.CharinContract.Reminds;
+import yuki312.android.charin.demo.provider.CharinContract.BankColumns;
+import yuki312.android.charin.demo.provider.CharinContract.Banks;
+import yuki312.android.charin.demo.provider.CharinContract.RemindColumns;
+import yuki312.android.charin.demo.provider.CharinContract.Reminds;
 import yuki312.android.charin.demo.util.LogUtils;
 
 import static yuki312.android.charin.demo.util.LogUtils.LOGE;

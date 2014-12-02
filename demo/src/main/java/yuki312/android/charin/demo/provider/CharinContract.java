@@ -1,4 +1,4 @@
-package yuki312.android.charin.demo.model;
+package yuki312.android.charin.demo.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
