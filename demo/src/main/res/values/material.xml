@@ -111,14 +111,29 @@
 
     <dimen name="Material_Component_Single_Line_Avatar_List_Text_Size">16sp</dimen>
     <dimen name="Material_Component_Single_Line_Avatar_List_Height">56dp</dimen>
-    <dimen name="Material_Component_Single_Line_Avatar_List_Avatar_Padding_Left">16dp</dimen>
-    <dimen name="Material_Component_Single_Line_Avatar_List_Text_Padding_Left">72dp</dimen>
+    <dimen name="Material_Component_Single_Line_Avatar_List_Avatar_Padding_Start">16dp</dimen>
+    <dimen name="Material_Component_Single_Line_Avatar_List_Text_Padding_Start">72dp</dimen>
     <dimen name="Material_Component_Single_Line_Avatar_List_Text_Padding_Top">20dp</dimen>
     <dimen name="Material_Component_Single_Line_Avatar_List_Text_Padding_Bottom">24dp</dimen>
 
     <dimen name="Material_Component_Two_Line_List_Height">72dp</dimen>
     <dimen name="Material_Component_Two_Line_Icon_List_Height">72dp</dimen>
     <dimen name="Material_Component_Two_Line_Avatar_List_Height">72dp</dimen>
+
+    <!--
+      Material Design Components Snackbars
+      Reference from http://www.google.com/design/spec/components/snackbars-toasts.html
+      -->
+    <dimen name="Material_Component_Snackbar_Padding_Start">24dp</dimen>
+    <dimen name="Material_Component_Snackbar_Padding_End">24dp</dimen>
+    <dimen name="Material_Component_Snackbar_Padding_Top">16dp</dimen>
+    <dimen name="Material_Component_Snackbar_Padding_Bottom">16dp</dimen>
+    <dimen name="Material_Component_Snackbar_Distance_From_Button">24dp</dimen>
+    <dimen name="Material_Component_Snackbar_Bottom_Padding_Start">8dp</dimen>
+    <dimen name="Material_Component_Snackbar_Bottom_Padding_End">8dp</dimen>
+    <color name="Material_Component_Snackbar_Background_Color">#323232</color>
+    <dimen name="Material_Component_Snackbar_Text_Size">14sp</dimen>
+    <color name="Material_Component_Snackbar_Text_Color">#FFFFFF</color>
 
     <!--
       Material Design Color

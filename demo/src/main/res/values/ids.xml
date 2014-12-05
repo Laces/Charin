@@ -17,4 +17,7 @@
 
 <resources>
     <item name="view_toolbar" type="id"/>
+    <item name="view_snackbar" type="id"/>
+    <item name="view_snackbar_message" type="id"/>
+    <item name="view_snackbar_action" type="id"/>
 </resources>
